@@ -1,0 +1,1 @@
+web: java -Dserver.port=$PORT -jar target/dashery-product-ingestor-0.0.1-SNAPSHOT.jar
