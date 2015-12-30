@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.ui.ExtendedModelMap;
 import uk.co.dashery.productfeed.csv.AffiliateWindowProductCsvParser;
 import uk.co.dashery.productfeed.csv.DasheryProductCsvParser;
@@ -34,7 +34,7 @@ public class ProductFeedControllerTest {
 
 
     @Mock
-    private ApplicationEventPublisher applicationEventPublisher;
+    private AmqpTemplate amqpTemplate;
 
     @Before
     public void setUp() {
@@ -45,9 +45,7 @@ public class ProductFeedControllerTest {
     public void testIngestsProducts() throws Exception {
         productFeedController.ingestProducts(new ProductFeedForm(generateCsvFile("test.csv")));
 
-        ProductsCreatedEvent expectedProductsCreatedEvent = new ProductsCreatedEvent
-                (expectedProducts());
-        verify(applicationEventPublisher).publishEvent(expectedProductsCreatedEvent);
+        verify(amqpTemplate).convertAndSend(expectedProducts());
     }
 
     @Test

@@ -1,6 +1,6 @@
 package uk.co.dashery.productfeed;
 
-import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.amqp.core.AmqpTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,7 +19,7 @@ public class ProductFeedController {
     @Inject
     private ProductFeedFactory productFeedFactory;
     @Inject
-    private ApplicationEventPublisher applicationEventPublisher;
+    private AmqpTemplate amqpTemplate;
 
     @RequestMapping(value = "/productFeed", method = RequestMethod.GET)
     public String productsForm(Model model) {
@@ -32,6 +32,6 @@ public class ProductFeedController {
     public void ingestProducts(@ModelAttribute ProductFeedForm productFeedForm) throws IOException {
         ProductFeed productFeed = productFeedFactory.create(productFeedForm);
         List<Product> products = productFeed.getProducts();
-        applicationEventPublisher.publishEvent(new ProductsCreatedEvent(products));
+        amqpTemplate.convertAndSend(products);
     }
 }
