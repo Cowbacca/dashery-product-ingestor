@@ -32,6 +32,6 @@ public class ProductFeedController {
     public void ingestProducts(@ModelAttribute ProductFeedForm productFeedForm) throws IOException {
         ProductFeed productFeed = productFeedFactory.create(productFeedForm);
         List<Product> products = productFeed.getProducts();
-        amqpTemplate.convertAndSend(products);
+        amqpTemplate.convertAndSend("products", products);
     }
 }
