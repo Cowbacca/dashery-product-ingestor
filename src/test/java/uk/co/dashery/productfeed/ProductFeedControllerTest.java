@@ -45,7 +45,7 @@ public class ProductFeedControllerTest {
     public void testIngestsProducts() throws Exception {
         productFeedController.ingestProducts(new ProductFeedForm(generateCsvFile("test.csv")));
 
-        verify(amqpTemplate).convertAndSend(expectedProducts());
+        verify(amqpTemplate).convertAndSend("products", expectedProducts());
     }
 
     @Test
